@@ -44,7 +44,7 @@ def edges_graph3(minimum, Array1, Array2):
         i += 1
     i = 0
     while i < M:
-        j = 0
+        j = i
         while j < M:
             if (Array1[i][j] == 1):
                 c.create_line(X[i] + 5, Y[i] + 5, X[j] + 5, Y[j] + 5)  # Создаём рёбра между i-й вершиной и смежными с ней
