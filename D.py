@@ -1,6 +1,7 @@
 from  tkinter import *
 import math
 
+# Функция для визуализации вершин графов
 def vizualization (centerX, centerY, radius, angel, X, Y, nm):
     i = 0
     while i < nm:
@@ -10,123 +11,95 @@ def vizualization (centerX, centerY, radius, angel, X, Y, nm):
         Y.append(y)
         c.create_oval(x, y, x + 10, y + 10, fill="black")  # Рисуем вершину
         c.create_text(x + 15, y - 2, text=f"{i + 1}")  # Подписываем её
+        i += 1 # #
+# Функция для того, чтобы разделить экран на 3 части
+def split_screen():
+    c.create_line(0, 350, 1500, 350)
+    c.create_line(720, 0, 720, 350)
+# Функция для ввода матриц смежности и отрисовки рёбер первого и второго графов
+def matrix_input(Array, n, X, Y):
+
+    i = 0
+    while i < n:
+
+        array = list(map(int, input(f"Введите {i + 1} строчку матрицы смежности для первого графа").split()))
+        Array.append(array)
+        j = 0
+        while j < n:
+            if (j > i):  # чтобы не рисовать дважды одно ребро, проверяем не было ли оно уже нарисовано
+                if (array[j] == 1):
+                    c.create_line(X[i] + 5, Y[i] + 5, X[j] + 5, Y[j] + 5)  # Создаём рёбра между i-й вершиной и смежными с ней
+            j += 1
+        i += 1
+# Функция для отрисовки рёбер третьего графа
+def edges_graph3(minimum, Array1, Array2):
+    i = 0
+    while i < minimum:
+        j = 0
+        while j < minimum:
+            Array1[i][j] += Array2[i][j]
+            if (Array1[i][j] == 2):
+                Array1[i][j] = 1
+            j += 1
+        i += 1
+    i = 0
+    while i < M:
+        j = 0
+        while j < M:
+            if (Array1[i][j] == 1):
+                c.create_line(X[i] + 5, Y[i] + 5, X[j] + 5, Y[j] + 5)  # Создаём рёбра между i-й вершиной и смежными с ней
+            j += 1
         i += 1
 
 root = Tk()
 c = Canvas(root, width="2048", heigh="1024") # Создаю окно
 c.pack()
 
-c.create_line(0, 350, 1500, 350)
-c.create_line(720, 0, 720, 350)
+split_screen()
 
 n =  int(input("Введите количество вершин первого графа"))
 m =  int(input("Введите количество вершин второго графа"))
 
-centerXn = 360.0
-centerYn = 175.0
-centerXm = 1080.0
-centerYm = 175.0
-centerX = 720.0
-centerY = 525.0
+centerXn = 360.0  # Все графы будут иметь форму правильного многоугольника. Задаю координату по X центра окружности
+                  # в которую будет вписан 1й граф
+centerYn = 175.0  # Координата по y для первого графа
+centerXm = 1080.0 # Координата по x для второго графа
+centerYm = 175.0  # Координата по y для второго графа
+centerX = 720.0   # Координата по x для третьего графа
+centerY = 525.0   # Координата по y для третьего графа
+M = max(n, m)     # Количество вершин третьего графа
+radiusn = 5*n     # Расстояние на которое вершины первого графа удалена от центра
+radiusm = 5*m     # Расстояние на которое вершины второго графа удалена от центра
+radius = 5*M      # Расстояние на которое вершины третьего графа удалена от центра
+angel1 = 2 * math.pi / n # Угол между двумя смежными вершинами первого графа
+angel2 = 2 * math.pi / m # Угол между двумя смежными вершинами второго графа
+angel = 2 * math.pi / M # Угол между двумя смежными вершинами третьего графа
+Xn = [] # Массив для хранения координаты Х вершин первого графа
+Yn = [] # Массив для хранения координаты У вершин первого графа
+Xm = [] # Массив для хранения координаты Х вершин второго графа
+Ym = [] # Массив для хранения координаты У вершин второго графа
+X = []  # Массив для хранения координаты Х вершин третьего графа
+Y = []  # Массив для хранения координаты У вершин третьего графа
 
-M = max(n, m)
-radiusn = 5*n # Расстояние на которое вершина удалена от центра
-radiusm = 5*m
-radius = 5*M
-angel1 = 2 * math.pi / n # Угол между двумя смежными вершинами
-angel2 = 2 * math.pi / m
-angel = 2 * math.pi / M
-Xn = []
-Yn = []
-Xm = []
-Ym = []
-X = []
-Y = []
-vizualization(centerXn, centerYn, radiusn, angel1, Xn, Yn, n)
-vizualization(centerXm, centerYm, radiusm, angel2, Xm, Ym, m)
-vizualization(centerX,centerY, radius, angel, X, Y, M)
+vizualization(centerXn, centerYn, radiusn, angel1, Xn, Yn, n) # Создаю вершины 1 графа
+vizualization(centerXm, centerYm, radiusm, angel2, Xm, Ym, m) # Создаю вершины 2 графа
+vizualization(centerX,centerY, radius, angel, X, Y, M)        # Создаю вершины 3 графа
 
+A = [] # Матрица смежности вершин для первого графа
+B = [] # Матрица смежности вершин для второго графа
 
-A = []
-i = 0
-while i < n:
+matrix_input(A, n, Xn, Yn) # Ввод матрицы смежности вершин и визуализация рёбер для первого графа
+matrix_input(B, m, Xm, Ym) # Ввод матрицы смежности вершин и визуализация рёбер для второго графа
 
-    a = list(map(int, input(f"Введите {i+1} строчку матрицы смежности для первого графа").split()))
-    A.append(a)
-    j = 0
-    while j < n:
-        if (j > i):  # чтобы не рисовать дважды одно ребро, проверяем не было ли оно уже нарисовано
-            if (a[j] == 1):
-                c.create_line(Xn[i] + 5, Yn[i] + 5, Xn[j] + 5, Yn[j] + 5)  # Создаём рёбра между i-й вершиной и смежными с ней
-        j += 1
-    i += 1
-
-B = []
-i = 0
-while i < m:
-
-    b = list(map(int, input(f"Введите {i+1} строчку матрицы смежности для второго графа").split()))
-    B.append(b)
-
-
-    j = 0
-    while j < m:
-        if (j > i):  # чтобы не рисовать дважды одно ребро, проверяем не было ли оно уже нарисовано
-            if (b[j] == 1):
-                c.create_line(Xm[i] + 5, Ym[i] + 5, Xm[j] + 5, Ym[j] + 5)  # Создаём рёбра между i-й вершиной и смежными с ней
-        j += 1
-    i += 1
-
-C = []
-i = 0
-
-minimum = min(m, n)
-if minimum == n:
-    while i < minimum:
-        j = 0
-        while j < minimum:
-            B[i][j] += A[i][j]
-            if (B[i][j] == 2):
-                B[i][j] = 1
-
-            j += 1
-        i += 1
-
-    i = 0
-    while i < M:
-        j = 0
-        while j < M:
-            if (B[i][j] == 1):
-                c.create_line(X[i] + 5, Y[i] + 5, X[j] + 5, Y[j] + 5)  # Создаём рёбра между i-й вершиной и смежными с ней
-            j += 1
-        i += 1
-
+if m > n:
+    edges_graph3(n, B, A)
 else:
-    while i < minimum:
-        j = 0
-        while j < minimum:
-            A[i][j] += B[i][j]
-            if (A[i][j] == 2):
-                A[i][j] = 1
-            if (A[i][j] == 1):
-                c.create_line(X[i] + 5, Y[i] + 5, X[j] + 5, Y[j] + 5)  # Создаём рёбра между i-й вершиной и смежными с ней
-
-            j += 1
-        i += 1
-    i = 0
-    while i < M:
-        j = 0
-        while j < M:
-            if (A[i][j] == 1):
-                c.create_line(X[i] + 5, Y[i] + 5, X[j] + 5,
-                              Y[j] + 5)  # Создаём рёбра между i-й вершиной и смежными с ней
-            j += 1
-        i += 1
-
-
-
+    edges_graph3(m, A, B)
 
 root.mainloop()
+
+
+# Данные для тестирования программы
 
 # 3
 # 4
@@ -137,7 +110,6 @@ root.mainloop()
 # 0 0 1 0
 # 0 1 0 1
 # 1 0 1 0
-
 
 # 5
 # 4
