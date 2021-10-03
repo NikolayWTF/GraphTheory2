@@ -29,13 +29,13 @@ def Visualisation(n, m, array):
             ind1 += 1
             ind2 = 1
         if (i < k / 4):
-            c.create_text(x + 20, y + 20, text="{" + str(ind1) + ", " + str(ind2) + "}")
+            c.create_text(x + 20, y + 20, text="{" + str(ind2) + ", " + str(ind1) + "}")
         elif (i < k / 2):
-            c.create_text(x + 30, y + 2, text="{" + str(ind1) + ", " + str(ind2) + "}")
+            c.create_text(x + 30, y + 2, text="{" + str(ind2) + ", " + str(ind1) + "}")
         elif (i < 3 * k / 4):
-            c.create_text(x - 15, y - 9, text="{" + str(ind1) + ", " + str(ind2) + "}")
+            c.create_text(x - 15, y - 9, text="{" + str(ind2) + ", " + str(ind1) + "}")
         else:
-            c.create_text(x - 20, y + 10, text="{" + str(ind1) + ", " + str(ind2) + "}")
+            c.create_text(x - 20, y + 10, text="{" + str(ind2) + ", " + str(ind1) + "}")
         ind2 += 1
         i += 1
 
@@ -190,6 +190,32 @@ def Diz(n, m, D):
             j += 1
         i += 1
 
+def Root(n, m, K):
+    k = n * m
+    i = 0
+    while i < k:
+        K.append([])
+        i += 1
+    i = 0
+    while i < m:
+        l = len(B[i])
+        j = 0
+        while j < l:
+            K[i].append(B[i][j])
+            j += 1
+        i += 1
+    ind = 0
+    while ind < m:
+        i = 0
+        while i < n:
+            l = len(A[i])
+            j = 0
+            while j < l:
+                K[i * m + ind].append((A[i][j] - 1) * m + 1 + ind)
+                j += 1
+            i += 1
+        ind += 1
+
 while v == 1:
 
     if ans == 1:
@@ -334,6 +360,21 @@ while v == 1:
         print("8 Выйти из программы ")
         ans = int(input())
 
+    elif ans == 7:
+        K = []
+        Root(n, m, K)
+        Visualisation(n, m, K)
+
+        print("Выберете цифру, чтобы сделать соответствующее действие")
+        print("1 Ввести новые данные")
+        print("2 Вывести Декартово произведение с уже введёнными данными")
+        print("3 Вывести Тензерное произведение с уже введёнными данными")
+        print("4 Вывести Сильное произведение с уже введёнными данными")
+        print("5 Вывести Лексикографическое произведение с уже введёнными данными")
+        print("6 Вывести Дизъюнктивное произведение с уже введёнными данными")
+        print("7 Вывести Корневое произведение с уже введёнными данными")
+        print("8 Выйти из программы ")
+        ans = int(input())
     elif ans == 8:
         v = 0
 
@@ -383,3 +424,11 @@ while v == 1:
 # 0 0 0 0
 # 1 0 0 0
 # 1 0 0 0
+
+# 2
+# 3
+# 0 1
+# 1 0
+# 0 0 0
+# 0 0 1
+# 0 1 0
